@@ -131,6 +131,7 @@ class MainWindow:
 
         self.edit_pane = self.builder.get_object("edit_pane")
         self.text_vbox = self.builder.get_object("text_vbox")
+        self.random_day_button = self.builder.get_object('random_day_button')
 
         use_internal_preview = self.journal.config.read("useInternalPreview", 1)
         if use_internal_preview and browser.WebKit2:
@@ -223,6 +224,7 @@ class MainWindow:
             "on_main_frame_window_state_event": self.on_main_frame_window_state_event,
             "on_add_new_entry_button_clicked": self.on_add_new_entry_button_clicked,
             "on_main_frame_delete_event": self.on_main_frame_delete_event,
+            "on_random_day_button_clicked": self.on_random_day_button_clicked,
             # connect_signals can only be called once, it seems
             # Otherwise RuntimeWarnings are raised: RuntimeWarning: missing handler '...'
         }
@@ -272,6 +274,7 @@ class MainWindow:
             (self.back_one_day_button, "clicked", "<Ctrl>Page_Up"),
             (self.today_button, "clicked", "<Alt>Home"),
             (self.forward_one_day_button, "clicked", "<Ctrl>Page_Down"),
+            (self.random_day_button, 'clicked', '<Ctrl>R')
         ]
         for button, signal, shortcut in shortcuts:
             (keyval, mod) = Gtk.accelerator_parse(shortcut)
@@ -544,6 +547,9 @@ class MainWindow:
 
     def on_forward_one_day_button_clicked(self, widget):
         self.journal.go_to_next_day()
+
+    def on_random_day_button_clicked(self, widget):
+        self.journal.go_to_random_day()
 
     def on_browser_decide_policy(self, webview, decision, decision_type):
         """
